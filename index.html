@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HygieneClean B2B - Corporate Hygiene Management</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0fdfa',
+                            100: '#ccfbf1',
+                            500: '#14b8a6',
+                            600: '#0d9488',
+                            700: '#0f766e',
+                            900: '#134e4a',
+                        },
+                        darkBg: '#0f172a',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    </style>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col">
+
+    <!-- Top Navigation Header -->
+    <header class="bg-slate-800/80 backdrop-blur-md border-b border-slate-700/60 sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="p-2 bg-brand-500/20 text-brand-500 rounded-xl border border-brand-500/30">
+                    <i data-lucide="sparkles" class="w-6 h-6"></i>
+                </div>
+                <div>
+                    <h1 class="font-bold text-lg text-white leading-tight">HygieneClean B2B</h1>
+                    <p class="text-xs text-slate-400">Corporate Supply Chain</p>
+                </div>
+            </div>
+
+            <!-- View Switcher Toggle -->
+            <div class="flex items-center gap-3 bg-slate-900/80 p-1.5 rounded-xl border border-slate-700/50">
+                <button id="btn-admin-view" onclick="switchView('admin')" class="px-4 py-1.5 text-xs font-semibold rounded-lg transition-all bg-brand-600 text-white shadow-lg">
+                    <i data-lucide="shield-check" class="w-3.5 h-3.5 inline mr-1"></i> Admin Dashboard
+                </button>
+                <button id="btn-client-view" onclick="switchView('client')" class="px-4 py-1.5 text-xs font-semibold rounded-lg text-slate-400 hover:text-white transition-all">
+                    <i data-lucide="shopping-bag" class="w-3.5 h-3.5 inline mr-1"></i> Client Order Portal
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8">
+
+        <!-- ================= ADMIN VIEW ================= -->
+        <div id="admin-view" class="space-y-8">
+            <!-- Stats Bar -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="bg-slate-800/50 border border-slate-700/60 rounded-2xl p-5 hover:border-brand-500/40 transition">
+                    <div class="flex justify-between items-start text-slate-400 mb-2">
+                        <span class="text-xs font-medium">TOTAL REVENUE</span>
+                        <i data-lucide="wallet" class="w-4 h-4 text-brand-500"></i>
+                    </div>
+                    <div class="text-2xl font-bold text-white" id="stat-revenue">৳0</div>
+                    <p class="text-xs text-emerald-400 mt-1">Real-time ledger balance</p>
+                </div>
+                <div class="bg-slate-800/50 border border-slate-700/60 rounded-2xl p-5 hover:border-brand-500/40 transition">
+                    <div class="flex justify-between items-start text-slate-400 mb-2">
+                        <span class="text-xs font-medium">CORPORATE CLIENTS</span>
+                        <i data-lucide="building-2" class="w-4 h-4 text-brand-500"></i>
+                    </div>
+                    <div class="text-2xl font-bold text-white" id="stat-clients">0</div>
+                    <p class="text-xs text-slate-400 mt-1">Active enterprise accounts</p>
+                </div>
+                <div class="bg-slate-800/50 border border-slate-700/60 rounded-2xl p-5 hover:border-brand-500/40 transition">
+                    <div class="flex justify-between items-start text-slate-400 mb-2">
+                        <span class="text-xs font-medium">PRODUCTS IN STOCK</span>
+                        <i data-lucide="package" class="w-4 h-4 text-brand-500"></i>
+                    </div>
+                    <div class="text-2xl font-bold text-white" id="stat-products">0 Items</div>
+                    <p class="text-xs text-amber-400 mt-1" id="stat-lowstock">0 Low stock items</p>
+                </div>
+                <div class="bg-slate-800/50 border border-slate-700/60 rounded-2xl p-5 hover:border-brand-500/40 transition">
+                    <div class="flex justify-between items-start text-slate-400 mb-2">
+                        <span class="text-xs font-medium">ORDERS RECEIVED</span>
+                        <i data-lucide="shopping-cart" class="w-4 h-4 text-brand-500"></i>
+                    </div>
+                    <div class="text-2xl font-bold text-white" id="stat-orders">0</div>
+                    <p class="text-xs text-sky-400 mt-1">Client portal requests</p>
+                </div>
+            </div>
+
+            <!-- Admin Management Tabs -->
+            <div class="flex gap-2 border-b border-slate-700/80 pb-3">
+                <button onclick="switchAdminTab('products')" id="tab-products" class="px-4 py-2 text-sm font-semibold rounded-xl bg-brand-600 text-white shadow">
+                    Products & Inventory
+                </button>
+                <button onclick="switchAdminTab('clients')" id="tab-clients" class="px-4 py-2 text-sm font-semibold rounded-xl text-slate-400 hover:bg-slate-800">
+                    Client Accounts
+                </button>
+                <button onclick="switchAdminTab('orders')" id="tab-orders" class="px-4 py-2 text-sm font-semibold rounded-xl text-slate-400 hover:bg-slate-800">
+                    Orders & Billing
+                </button>
+            </div>
+
+            <!-- PRODUCTS PANEL -->
+            <div id="panel-products" class="space-y-4">
+                <div class="flex flex-col sm:flex-row gap-3 justify-between items-center">
+                    <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                        <i data-lucide="boxes" class="w-5 h-5 text-brand-500"></i> Product Inventory
+                    </h3>
+                    <button onclick="openModal('add-product-modal')" class="w-full sm:w-auto px-4 py-2 bg-brand-600 hover:bg-brand-500 text-white rounded-xl font-semibold text-sm flex items-center justify-center gap-2 transition">
+                        <i data-lucide="plus" class="w-4 h-4"></i> Add New Product
+                    </button>
+                </div>
+                <div class="bg-slate-800/50 border border-slate-700/60 rounded-2xl overflow-hidden">
+                    <table class="w-full text-left text-sm text-slate-300">
+                        <thead class="bg-slate-800 text-slate-400 uppercase text-xs">
+                            <tr>
+                                <th class="p-4">Product Name</th>
+                                <th class="p-4">Category</th>
+                                <th class="p-4">Unit Price</th>
+                                <th class="p-4">Stock</th>
+                                <th class="p-4 text-right">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="product-list-body" class="divide-y divide-slate-700/50">
+                            <!-- Dynamic Content -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- CLIENTS PANEL -->
+            <div id="panel-clients" class="space-y-4 hidden">
+                <div class="flex flex-col sm:flex-row gap-3 justify-between items-center">
+                    <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                        <i data-lucide="users" class="w-5 h-5 text-brand-500"></i> Corporate Clients
+                    </h3>
+                    <button onclick="openModal('add-client-modal')" class="w-full sm:w-auto px-4 py-2 bg-brand-600 hover:bg-brand-500 text-white rounded-xl font-semibold text-sm flex items-center justify-center gap-2 transition">
+                        <i data-lucide="user-plus" class="w-4 h-4"></i> Add Corporate Client
+                    </button>
+                </div>
+                <div class="bg-slate-800/50 border border-slate-700/60 rounded-2xl overflow-hidden">
+                    <table class="w-full text-left text-sm text-slate-300">
+                        <thead class="bg-slate-800 text-slate-400 uppercase text-xs">
+                            <tr>
+                                <th class="p-4">Company Name</th>
+                                <th class="p-4">Contact Person</th>
+                                <th class="p-4">Payment Terms</th>
+                                <th class="p-4">Balance Due</th>
+                                <th class="p-4 text-right">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="client-list-body" class="divide-y divide-slate-700/50">
+                            <!-- Dynamic Content -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- ORDERS PANEL -->
+            <div id="panel-orders" class="space-y-4 hidden">
+                <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                    <i data-lucide="receipt" class="w-5 h-5 text-brand-500"></i> Orders & Invoices
+                </h3>
+                <div class="bg-slate-800/50 border border-slate-700/60 rounded-2xl overflow-hidden">
+                    <table class="w-full text-left text-sm text-slate-300">
+                        <thead class="bg-slate-800 text-slate-400 uppercase text-xs">
+                            <tr>
+                                <th class="p-4">Order ID</th>
+                                <th class="p-4">Client</th>
+                                <th class="p-4">Total Items</th>
+                                <th class="p-4">Total Cost</th>
+                                <th class="p-4">Status</th>
+                                <th class="p-4 text-right">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="order-list-body" class="divide-y divide-slate-700/50">
+                            <!-- Dynamic Content -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= CLIENT ORDER PORTAL VIEW ================= -->
+        <div id="client-view" class="space-y-6 hidden">
+            <div class="bg-gradient-to-r from-brand-900/60 to-slate-800 border border-brand-500/30 rounded-2xl p-6 flex flex-col md:flex-row justify-between items-center gap-4">
+                <div>
+                    <h2 class="text-2xl font-bold text-white">Corporate Supply Portal</h2>
+                    <p class="text-sm text-slate-300 mt-1">Select products, set required quantities, and submit order requests directly.</p>
+                </div>
+                <div class="bg-slate-900/80 px-4 py-3 rounded-xl border border-slate-700 flex items-center gap-3">
+                    <i data-lucide="shopping-cart" class="w-6 h-6 text-brand-500"></i>
+                    <div>
+                        <div class="text-xs text-slate-400">Cart Total</div>
+                        <div class="text-lg font-bold text-white" id="cart-total-display">৳0</div>
+                    </div>
+                    <button onclick="openModal('checkout-modal')" class="ml-3 px-4 py-2 bg-brand-600 hover:bg-brand-500 text-white font-semibold text-xs rounded-lg transition">
+                        Checkout (<span id="cart-count">0</span>)
+                    </button>
+                </div>
+            </div>
+
+            <!-- Product Grid for Clients -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" id="client-product-grid">
+                <!-- Dynamic Content -->
+            </div>
+        </div>
+    </main>
+
+    <!-- Modals -->
+    <!-- Add Product Modal -->
+    <div id="add-product-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
+        <div class="bg-slate-800 border border-slate-700 rounded-2xl max-w-md w-full p-6 space-y-4">
+            <div class="flex justify-between items-center">
+                <h3 class="font-bold text-lg text-white">Add New Hygiene Product</h3>
+                <button onclick="closeModal('add-product-modal')" class="text-slate-400 hover:text-white"><i data-lucide="x"></i></button>
+            </div>
+            <form onsubmit="handleAddProduct(event)" class="space-y-3">
+                <div>
+                    <label class="text-xs text-slate-400 block mb-1">Product Title</label>
+                    <input type="text" id="p-name" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-white focus:outline-none focus:border-brand-500" placeholder="e.g. Floor Cleaner 5L">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="text-xs text-slate-400 block mb-1">Category</label>
+                        <select id="p-category" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-white focus:outline-none focus:border-brand-500">
+                            <option>Sanitization</option>
+                            <option>Paper Goods</option>
+                            <option>Cleaning Chemicals</option>
+                            <option>Equipment</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="text-xs text-slate-400 block mb-1">Price (৳)</label>
+                        <input type="number" id="p-price" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-white focus:outline-none focus:border-brand-500" placeholder="1200">
+                    </div>
+                </div>
+                <div>
+                    <label class="text-xs text-slate-400 block mb-1">Initial Stock (Units)</label>
+                    <input type="number" id="p-stock" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-white focus:outline-none focus:border-brand-500" placeholder="50">
+                </div>
+                <button type="submit" class="w-full py-3 bg-brand-600 hover:bg-brand-500 text-white font-semibold text-sm rounded-xl transition mt-2">Save Product</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Client Modal -->
+    <div id="add-client-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
+        <div class="bg-slate-800 border border-slate-700 rounded-2xl max-w-md w-full p-6 space-y-4">
+            <div class="flex justify-between items-center">
+                <h3 class="font-bold text-lg text-white">Add Corporate Client</h3>
+                <button onclick="closeModal('add-client-modal')" class="text-slate-400 hover:text-white"><i data-lucide="x"></i></button>
+            </div>
+            <form onsubmit="handleAddClient(event)" class="space-y-3">
+                <div>
+                    <label class="text-xs text-slate-400 block mb-1">Company / Office Name</label>
+                    <input type="text" id="c-name" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-white focus:outline-none focus:border-brand-500" placeholder="e.g. Grameenphone HQ">
+                </div>
+                <div>
+                    <label class="text-xs text-slate-400 block mb-1">Contact Person & Phone</label>
+                    <input type="text" id="c-contact" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-white focus:outline-none focus:border-brand-500" placeholder="Rahim - 01700000000">
+                </div>
+                <div>
+                    <label class="text-xs text-slate-400 block mb-1">Payment Term</label>
+                    <select id="c-terms" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-white focus:outline-none focus:border-brand-500">
+                        <option>Net 15 Days</option>
+                        <option>Net 30 Days</option>
+                        <option>Net 60 Days</option>
+                        <option>Advance</option>
+                    </select>
+                </div>
+                <button type="submit" class="w-full py-3 bg-brand-600 hover:bg-brand-500 text-white font-semibold text-sm rounded-xl transition mt-2">Save Client Profile</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Checkout Modal for Client -->
+    <div id="checkout-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
+        <div class="bg-slate-800 border border-slate-700 rounded-2xl max-w-md w-full p-6 space-y-4">
+            <div class="flex justify-between items-center">
+                <h3 class="font-bold text-lg text-white">Complete Corporate Order</h3>
+                <button onclick="closeModal('checkout-modal')" class="text-slate-400 hover:text-white"><i data-lucide="x"></i></button>
+            </div>
+            <div class="space-y-3">
+                <div>
+                    <label class="text-xs text-slate-400 block mb-1">Select Client Account</label>
+                    <select id="checkout-client" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-white focus:outline-none focus:border-brand-500">
+                        <!-- Dynamic Client Options -->
+                    </select>
+                </div>
+                <div class="p-3 bg-slate-900/60 rounded-xl border border-slate-700/50 space-y-1 text-xs text-slate-300">
+                    <div class="flex justify-between"><span>Items Subtotal:</span><span id="co-subtotal">৳0</span></div>
+                    <div class="flex justify-between"><span>Delivery Charge:</span><span>৳0 (Free)</span></div>
+                    <div class="flex justify-between font-bold text-white text-sm pt-1 border-t border-slate-700"><span>Grand Total:</span><span id="co-total" class="text-brand-500">৳0</span></div>
+                </div>
+                <button onclick="submitClientOrder()" class="w-full py-3 bg-brand-600 hover:bg-brand-500 text-white font-semibold text-sm rounded-xl transition">Submit Order Request</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // State Management
+        let products = [];
+        let clients = [];
+        let orders = [];
+        let cart = {}; // { productId: qty }
+
+        function switchView(view) {
+            const adminView = document.getElementById('admin-view');
+            const clientView = document.getElementById('client-view');
+            const btnAdmin = document.getElementById('btn-admin-view');
+            const btnClient = document.getElementById('btn-client-view');
+
+            if (view === 'admin') {
+                adminView.classList.remove('hidden');
+                clientView.classList.add('hidden');
+                btnAdmin.className = "px-4 py-1.5 text-xs font-semibold rounded-lg transition-all bg-brand-600 text-white shadow-lg";
+                btnClient.className = "px-4 py-1.5 text-xs font-semibold rounded-lg text-slate-400 hover:text-white transition-all";
+            } else {
+                adminView.classList.add('hidden');
+                clientView.classList.remove('hidden');
+                btnClient.className = "px-4 py-1.5 text-xs font-semibold rounded-lg transition-all bg-brand-600 text-white shadow-lg";
+                btnAdmin.className = "px-4 py-1.5 text-xs font-semibold rounded-lg text-slate-400 hover:text-white transition-all";
+                renderClientGrid();
+            }
+        }
+
+        function switchAdminTab(tab) {
+            ['products', 'clients', 'orders'].forEach(t => {
+                document.getElementById(`panel-${t}`).classList.add('hidden');
+                document.getElementById(`tab-${t}`).className = "px-4 py-2 text-sm font-semibold rounded-xl text-slate-400 hover:bg-slate-800";
+            });
+            document.getElementById(`panel-${tab}`).classList.remove('hidden');
+            document.getElementById(`tab-${tab}`).className = "px-4 py-2 text-sm font-semibold rounded-xl bg-brand-600 text-white shadow";
+        }
+
+        function openModal(id) { 
+            if(id === 'checkout-modal') renderCheckoutModal();
+            document.getElementById(id).classList.remove('hidden'); 
+            document.getElementById(id).classList.add('flex'); 
+        }
+        function closeModal(id) { 
+            document.getElementById(id).classList.add('hidden'); 
+            document.getElementById(id).classList.remove('flex'); 
+        }
+
+        // Product Management
+        function handleAddProduct(e) {
+            e.preventDefault();
+            const product = {
+                id: Date.now(),
+                name: document.getElementById('p-name').value,
+                category: document.getElementById('p-category').value,
+                price: parseFloat(document.getElementById('p-price').value),
+                stock: parseInt(document.getElementById('p-stock').value)
+            };
+            products.push(product);
+            closeModal('add-product-modal');
+            e.target.reset();
+            updateUI();
+        }
+
+        // Client Management
+        function handleAddClient(e) {
+            e.preventDefault();
+            const client = {
+                id: Date.now(),
+                name: document.getElementById('c-name').value,
+                contact: document.getElementById('c-contact').value,
+                terms: document.getElementById('c-terms').value,
+                balance: 0
+            };
+            clients.push(client);
+            closeModal('add-client-modal');
+            e.target.reset();
+            updateUI();
+        }
+
+        // Cart & Order Handling
+        function updateCartQty(productId, delta) {
+            const current = cart[productId] || 0;
+            const newQty = Math.max(0, current + delta);
+            if (newQty === 0) delete cart[productId];
+            else cart[productId] = newQty;
+            renderClientGrid();
+            updateCartHeader();
+        }
+
+        function updateCartHeader() {
+            let total = 0;
+            let count = 0;
+            Object.keys(cart).forEach(id => {
+                const p = products.find(x => x.id == id);
+                if (p) {
+                    total += p.price * cart[id];
+                    count += cart[id];
+                }
+            });
+            document.getElementById('cart-total-display').innerText = `৳${total.toLocaleString()}`;
+            document.getElementById('cart-count').innerText = count;
+        }
+
+        function renderCheckoutModal() {
+            const select = document.getElementById('checkout-client');
+            select.innerHTML = clients.length ? '' : '<option value="">-- No Client Profile Found --</option>';
+            clients.forEach(c => {
+                select.innerHTML += `<option value="${c.id}">${c.name} (${c.terms})</option>`;
+            });
+
+            let total = 0;
+            Object.keys(cart).forEach(id => {
+                const p = products.find(x => x.id == id);
+                if (p) total += p.price * cart[id];
+            });
+
+            document.getElementById('co-subtotal').innerText = `৳${total.toLocaleString()}`;
+            document.getElementById('co-total').innerText = `৳${total.toLocaleString()}`;
+        }
+
+        function submitClientOrder() {
+            const clientId = document.getElementById('checkout-client').value;
+            if (!clientId) {
+                alert('Please add a client profile first from Admin Panel!');
+                return;
+            }
+            if (Object.keys(cart).length === 0) {
+                alert('Cart is empty!');
+                return;
+            }
+
+            const client = clients.find(c => c.id == clientId);
+            let totalAmount = 0;
+            let totalItems = 0;
+
+            Object.keys(cart).forEach(id => {
+                const p = products.find(x => x.id == id);
+                if (p) {
+                    totalAmount += p.price * cart[id];
+                    totalItems += cart[id];
+                    p.stock -= cart[id]; // Deduct stock
+                }
+            });
+
+            const order = {
+                id: 'ORD-' + Math.floor(1000 + Math.random() * 9000),
+                clientName: client.name,
+                itemsCount: totalItems,
+                amount: totalAmount,
+                status: 'Processing',
+                date: new Date().toLocaleDateString()
+            };
+
+            client.balance += totalAmount;
+            orders.push(order);
+            cart = {};
+
+            closeModal('checkout-modal');
+            updateCartHeader();
+            updateUI();
+            switchView('admin');
+            switchAdminTab('orders');
+            alert('Order Request Submitted Successfully!');
+        }
+
+        // Render UI Data
+        function updateUI() {
+            // Stats Calculation
+            const totalRev = orders.reduce((sum, o) => sum + o.amount, 0);
+            const totalStock = products.reduce((sum, p) => sum + p.stock, 0);
+            const lowStockCount = products.filter(p => p.stock < 10).length;
+
+            document.getElementById('stat-revenue').innerText = `৳${totalRev.toLocaleString()}`;
+            document.getElementById('stat-clients').innerText = clients.length;
+            document.getElementById('stat-products').innerText = `${totalStock} Units`;
+            document.getElementById('stat-lowstock').innerText = `${lowStockCount} Low stock items`;
+            document.getElementById('stat-orders').innerText = orders.length;
+
+            // Product Table
+            const pBody = document.getElementById('product-list-body');
+            pBody.innerHTML = products.length ? '' : '<tr><td colspan="5" class="p-4 text-center text-slate-500">No products added yet. Click "+ Add New Product"</td></tr>';
+            products.forEach(p => {
+                pBody.innerHTML += `
+                    <tr>
+                        <td class="p-4 font-semibold text-white">${p.name}</td>
+                        <td class="p-4"><span class="px-2.5 py-1 text-xs rounded-lg bg-slate-700/60 text-slate-300 border border-slate-600/40">${p.category}</span></td>
+                        <td class="p-4 font-medium text-brand-400">৳${p.price.toLocaleString()}</td>
+                        <td class="p-4"><span class="${p.stock < 10 ? 'text-amber-400 font-bold' : ''}">${p.stock} pcs</span></td>
+                        <td class="p-4 text-right"><button onclick="products=products.filter(x=>x.id!=${p.id});updateUI();" class="text-rose-400 hover:text-rose-300 text-xs">Delete</button></td>
+                    </tr>
+                `;
+            });
+
+            // Client Table
+            const cBody = document.getElementById('client-list-body');
+            cBody.innerHTML = clients.length ? '' : '<tr><td colspan="5" class="p-4 text-center text-slate-500">No corporate clients added yet.</td></tr>';
+            clients.forEach(c => {
+                cBody.innerHTML += `
+                    <tr>
+                        <td class="p-4 font-semibold text-white">${c.name}</td>
+                        <td class="p-4 text-slate-400">${c.contact}</td>
+                        <td class="p-4"><span class="px-2.5 py-1 text-xs rounded-lg bg-brand-500/10 text-brand-400 border border-brand-500/20">${c.terms}</span></td>
+                        <td class="p-4 font-bold text-amber-400">৳${c.balance.toLocaleString()}</td>
+                        <td class="p-4 text-right"><button onclick="clients=clients.filter(x=>x.id!=${c.id});updateUI();" class="text-rose-400 hover:text-rose-300 text-xs">Delete</button></td>
+                    </tr>
+                `;
+            });
+
+            // Orders Table
+            const oBody = document.getElementById('order-list-body');
+            oBody.innerHTML = orders.length ? '' : '<tr><td colspan="6" class="p-4 text-center text-slate-500">No orders received yet. Switch to "Client Order Portal" to place test orders.</td></tr>';
+            orders.forEach(o => {
+                oBody.innerHTML += `
+                    <tr>
+                        <td class="p-4 font-mono font-bold text-white">${o.id}</td>
+                        <td class="p-4 font-medium text-slate-200">${o.clientName}</td>
+                        <td class="p-4 text-slate-400">${o.itemsCount} Items</td>
+                        <td class="p-4 font-bold text-brand-400">৳${o.amount.toLocaleString()}</td>
+                        <td class="p-4"><span class="px-2.5 py-1 text-xs font-semibold rounded-lg bg-sky-500/10 text-sky-400 border border-sky-500/20">${o.status}</span></td>
+                        <td class="p-4 text-right"><button onclick="alert('Printing Invoice for ${o.id}');" class="px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded-lg text-xs text-white">Invoice</button></td>
+                    </tr>
+                `;
+            });
+
+            lucide.createIcons();
+        }
+
+        function renderClientGrid() {
+            const grid = document.getElementById('client-product-grid');
+            grid.innerHTML = products.length ? '' : '<div class="col-span-full text-center text-slate-500 py-12">No hygiene items available in catalog. Add items from Admin Panel first!</div>';
+
+            products.forEach(p => {
+                const qty = cart[p.id] || 0;
+                grid.innerHTML += `
+                    <div class="bg-slate-800/60 border border-slate-700/60 rounded-2xl p-5 flex flex-col justify-between space-y-4 hover:border-brand-500/50 transition">
+                        <div>
+                            <span class="text-[10px] font-bold uppercase tracking-wider text-brand-400 bg-brand-500/10 px-2.5 py-1 rounded-md border border-brand-500/20">${p.category}</span>
+                            <h4 class="text-lg font-bold text-white mt-3">${p.name}</h4>
+                            <p class="text-xs text-slate-400 mt-1">Available Stock: ${p.stock} units</p>
+                        </div>
+                        <div class="flex items-center justify-between pt-3 border-t border-slate-700/50">
+                            <div class="text-xl font-extrabold text-white">৳${p.price.toLocaleString()}</div>
+                            <div class="flex items-center gap-2 bg-slate-900 border border-slate-700 rounded-xl p-1">
+                                <button onclick="updateCartQty(${p.id}, -1)" class="w-7 h-7 flex items-center justify-center bg-slate-800 hover:bg-slate-700 rounded-lg text-white font-bold text-sm">-</button>
+                                <span class="w-6 text-center text-sm font-semibold text-white">${qty}</span>
+                                <button onclick="updateCartQty(${p.id}, 1)" class="w-7 h-7 flex items-center justify-center bg-brand-600 hover:bg-brand-500 rounded-lg text-white font-bold text-sm">+</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            lucide.createIcons();
+        }
+
+        // Initialize Icons & UI
+        window.onload = function() {
+            lucide.createIcons();
+            updateUI();
+        };
+    </script>
+</body>
+</html>
